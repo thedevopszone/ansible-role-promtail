@@ -1,0 +1,12 @@
+---
+- name: Manage Promtail user(s)
+  ansible.builtin.include_tasks: user.yml
+
+- name: Install Promtail
+  ansible.builtin.include_tasks: install.yml
+
+- name: Configure Promtail
+  ansible.builtin.include_tasks: config.yml
+
+- name: Manage Promtail service
+  ansible.builtin.include_tasks: service.yml
