@@ -1,0 +1,14 @@
+---
+- name: user | Creating Promtail Group
+  ansible.builtin.group:
+    name: "{{ promtail_user_info['group'] }}"
+  become: true
+
+- name: user | Creating Promtail User
+  ansible.builtin.user:
+    name: "{{ promtail_user_info['user'] }}"
+    groups: "{{ promtail_user_info['group'] }}"
+    state: present
+    system: true
+    append: true
+  become: true
