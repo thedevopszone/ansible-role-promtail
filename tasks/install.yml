@@ -1,0 +1,49 @@
+---
+- name: install | Downloading Promtail {{ promtail_version }}
+  ansible.builtin.get_url:
+    url: "{{ promtail_download_url }}"
+    dest: /tmp/
+  become: true
+
+- name: install | Extracting Promtail
+  ansible.builtin.unarchive:
+    src: "/tmp/{{ promtail_download_dir }}.zip"
+    dest: /tmp/
+    remote_src: true
+  become: true
+
+- name: create Promtail config dir
+  ansible.builtin.file:
+    path: "{{ promtail_dir }}"
+    state: directory
+    owner: "{{ promtail_user_info['user'] }}"
+    group: "{{ promtail_user_info['group'] }}"
+
+- name: create Promtail dir for binaries
+  ansible.builtin.file:
+    path: "{{ promtail_bin_dir }}"
+    state: directory
+    owner: "{{ promtail_user_info['user'] }}"
+    group: "{{ promtail_user_info['group'] }}"
+
+- name: copy binaries
+  ansible.builtin.copy:
+    src: "/tmp/{{ item }}"
+    dest: "{{ promtail_bin_dir }}/promtail"
+    remote_src: true
+    mode: '0774'
+    owner: "{{ promtail_user_info['user'] }}"
+    group: "{{ promtail_user_info['group'] }}"
+  loop:
+    - promtail-linux-amd64
+  become: true
+
+- name: cleanup directory
+  ansible.builtin.file:
+    path: "/tmp/{{ promtail_download_dir }}"
+    state: absent
+
+- name: cleanup files
+  ansible.builtin.file:
+    path: "/tmp/{{ promtail_download_dir }}.zip"
+    state: absent
