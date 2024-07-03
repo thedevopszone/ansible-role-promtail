@@ -1,0 +1,11 @@
+---
+- name: config | Configuring Promtail
+  ansible.builtin.template:
+    src: config.yml.j2
+    dest: "{{ promtail_config_file }}"
+    owner: "{{ promtail_user_info['user'] }}"
+    group: "{{ promtail_user_info['group'] }}"
+    mode: u=rw,g=r,o=r
+  notify:
+    - restart promtail
+  become: true
