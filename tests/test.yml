@@ -1,0 +1,7 @@
+---
+- hosts: all
+  become_method: sudo
+  connection: local
+  gather_facts: yes
+  roles:
+    - ../../ansible-role-promtail
