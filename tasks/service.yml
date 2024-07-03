@@ -1,0 +1,18 @@
+---
+- name: service | Configuring Promtail Service
+  ansible.builtin.template:
+    src: etc/systemd/system/promtail.service.j2
+    dest: /etc/systemd/system/promtail.service
+    mode: u=rw,g=r,o=r
+  notify:
+    - reload systemd
+    - restart promtail
+  become: true
+  when: ansible_service_mgr == "systemd"
+
+- name: service | Ensuring Promtail Service Is Started and Enabled
+  ansible.builtin.service:
+    name: promtail
+    state: started
+    enabled: true
+  become: true
